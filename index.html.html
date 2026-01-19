@@ -1,0 +1,241 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Andika Jantoni | Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,500;0,900;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f6f2;
+  --text: #1a1a1a;
+  --muted: #888;
+  --space-md: clamp(2rem, 5vw, 5rem);
+  --space-lg: clamp(4rem, 10vw, 10rem);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  transition: background 0.8s ease, color 0.8s ease;
+}
+
+/* --- CURSOR --- */
+#cursor-dot { width: 6px; height: 6px; background: var(--text); position: fixed; border-radius: 50%; pointer-events: none; z-index: 10000; }
+#cursor-outline { width: 40px; height: 40px; border: 1px solid var(--text); position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999; transition: transform 0.2s ease; }
+
+/* --- NAVIGATION --- */
+header {
+  position: fixed;
+  top: 0; width: 100%;
+  padding: clamp(1rem, 2vw, 2rem) var(--space-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  mix-blend-mode: difference;
+  opacity: 0; 
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+header.visible { opacity: 1; pointer-events: all; }
+header strong { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #fff; letter-spacing: 1px; }
+nav a { color: #fff; text-decoration: none; margin-left: 30px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; }
+
+/* --- LANDING PAGE --- */
+#landing-page {
+  height: 100vh; width: 100%; display: flex; flex-direction: column;
+  justify-content: center; align-items: center; position: absolute;
+  top: 0; left: 0; z-index: 2000; background: var(--bg);
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+#landing-page.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 14vw, 12rem); font-weight: 900; margin-bottom: 2rem; }
+.hero-subtitle { font-size: 1.2rem; letter-spacing: 6px; text-transform: uppercase; color: var(--muted); }
+.enter-btn { margin-top: 50px; border: 1px solid var(--text); padding: 15px 40px; background: transparent; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; color: var(--text); transition: 0.3s; }
+.enter-btn:hover { background: var(--text); color: var(--bg); }
+
+/* --- SECTIONS --- */
+.view-section { display: none; padding-top: 15vh; min-height: 100vh; opacity: 0; transform: translateY(20px); }
+.view-section.active { display: block; animation: fadeIn 0.8s forwards; }
+@keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+.category-header { padding: 0 var(--space-md) 40px; border-bottom: 1px solid rgba(0,0,0,0.1); margin-bottom: 60px; }
+.category-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(3.5rem, 10vw, 8rem); line-height: 0.9; }
+.category-header span { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 4px; color: var(--muted); }
+
+/* Editorial Row Structure */
+.project-row { display: flex; align-items: center; gap: var(--space-md); padding: 0 var(--space-md) var(--space-lg); }
+.project-row:nth-child(even) { flex-direction: row-reverse; }
+.project-text { flex: 1; }
+.project-text h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 4rem); margin-bottom: 1rem; line-height: 1.1; }
+.project-text p { color: var(--muted); max-width: 400px; line-height: 1.6; }
+
+/* --- THE IMAGE "STAND" LOOK VIA CSS --- */
+.project-img { flex: 2; display: flex; justify-content: center; } /* Increased flex from 1.5 to 2 */
+.project-img img { 
+  width: 100%; 
+  max-width: 650px; /* Increased max-width from 500px to 650px */
+  height: auto; 
+  display: block; 
+  padding: 8%; /* Reduced padding slightly to make actual image look bigger inside the box */
+  background: #efeee9; 
+  box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+  transition: 0.8s ease; 
+}
+.project-img:hover img { transform: scale(1.02); }
+
+/* --- CONTACT FORM --- */
+.contact-container { max-width: 800px; margin: 0 auto; padding: 0 var(--space-md) 100px; }
+.form-group { position: relative; margin-bottom: 40px; }
+.form-group input, .form-group textarea { width: 100%; padding: 15px 0; background: transparent; border: none; border-bottom: 1px solid var(--muted); color: inherit; font-family: inherit; font-size: 1.1rem; outline: none; }
+.form-group label { position: absolute; top: 15px; left: 0; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; pointer-events: none; transition: 0.3s; }
+.form-group input:focus ~ label, .form-group input:valid ~ label, .form-group textarea:focus ~ label, .form-group textarea:valid ~ label { top: -10px; font-size: 0.6rem; color: var(--text); }
+
+/* SEND BUTTON */
+.send-btn {
+  width: 100%;
+  padding: 15px;
+  background: transparent;
+  border: 1px solid var(--text);
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.9rem;
+  transition: 0.3s;
+}
+.send-btn:hover { background: var(--text); color: var(--bg); }
+
+@media (max-width: 900px) {
+  .project-row { flex-direction: column !important; }
+  header { flex-direction: column; gap: 10px; padding: 20px; }
+  #cursor-dot, #cursor-outline { display: none; }
+  * { cursor: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor-dot"></div>
+<div id="cursor-outline"></div>
+
+<header id="main-nav">
+  <a href="#" onclick="goHome()" style="text-decoration: none;"><strong>ANDIKA JANTONI</strong></a>
+  <nav>
+    <a href="#" onclick="switchView('logos')">Logos</a>
+    <a href="#" onclick="switchView('posters')">Posters</a>
+    <a href="#" onclick="switchView('type')">Type</a>
+    <a href="#" onclick="switchView('contact')">Contact</a>
+  </nav>
+</header>
+
+<section id="landing-page">
+  <h1 class="hero-title">PORTOFOLIO</h1>
+  <p class="hero-subtitle">Andika Jantoni</p>
+  <button class="enter-btn" onclick="enterSite()">Enter Site</button>
+</section>
+
+<main id="logos" class="view-section">
+  <div class="category-header"><span>Vol. 01</span><h1>Logos</h1></div>
+  <section class="project-row">
+    <div class="project-text"><h2>SLOTHIN </h2><p>A Logo for jazz music app <br>inspired by sloth symbolizing chill and freeness.</p></div>
+    <div class="project-img"><img src="images/logo1.png"></div>
+  </section>
+  <section class="project-row">
+    <div class="project-text"><h2>SIP SIPS' </h2><p>Juice brand using cat in the shape of an orange fruit as a mascot.</p></div>
+    <div class="project-img"><img src="images/logo2.png"></div>
+  </section>
+  <section class="project-row">
+    <div class="project-text"><h2>KOY </h2><p>A blindbox character brand <br>Inspired by koy fish but in a mutated state.</p></div>
+    <div class="project-img"><img src="images/logo3.png"></div>
+  </section>
+</main>
+
+<main id="posters" class="view-section">
+  <div class="category-header"><span>Vol. 02</span><h1>Posters</h1></div>
+  <section class="project-row">
+    <div class="project-text"><h2>SLOTHIN' Promotional Poster </h2><p>A typographic study reflecting the relaxed and improvisational nature of jazz, featuring loose spacing and organic letterform structures.</p></div>
+    <div class="project-img"><img src="images/poster1.png"></div>
+  </section>
+  <section class="project-row">
+    <div class="project-text"><h2>SIP SIPS' Promotional Poster</h2><p>A playful promotional poster built from the SIP SIPS’ logo world, combining bold orange tones, hand-drawn textures, and the mischievous cat mascot to communicate freshness and fun.</p></div>
+    <div class="project-img"><img src="images/poster2.png"></div>
+  </section>
+  <section class="project-row">
+    <div class="project-text"><h2>KOY Promotional Poster</h2><p>A character-driven poster expanding the KOY universe, expressing its strange and collectible nature through bold shapes, imperfect forms, and an intentionally quirky mood.</p></div>
+    <div class="project-img"><img src="images/poster3.png"></div>
+  </section>
+</main>
+
+<main id="type" class="view-section">
+  <div class="category-header"><span>Vol. 03</span><h1>Type</h1></div>
+  <section class="project-row">
+    <div class="project-text"><h2>Because Jazz Isn’t Rushed</h2><p>A typographic exploration inspired by jazz culture, focusing on loose letter structures, relaxed rhythm, and organic forms that echo the chill personality of SLOTHIN.</p></div>
+    <div class="project-img"><img src="images/type1.png"></div>
+  </section>
+  <section class="project-row">
+    <div class="project-text"><h2>Meow-gical in Every Sip</h2><p>Custom lettering derived from the SIP SIPS’ logo, using rounded strokes and playful proportions to reinforce the brand’s friendly, cheerful, and approachable tone.</p></div>
+    <div class="project-img"><img src="images/type2.png"></div>
+  </section>
+  <section class="project-row">
+    <div class="project-text"><h2>Just KOY Things</h2><p>Experimental typography developed from the KOY character, embracing distortion, asymmetry, and irregular forms to match its mutated and unconventional visual identity.</p></div>
+    <div class="project-img"><img src="images/type3.png"></div>
+  </section>
+</main>
+
+<main id="contact" class="view-section">
+  <div class="category-header"><span>Contact</span><h1>Get in touch</h1></div>
+  <div class="contact-container">
+    <form onsubmit="event.preventDefault(); alert('Message sent!');">
+      <div class="form-group"><input type="text" id="name" required><label>Your Name</label></div>
+      <div class="form-group"><input type="email" id="email" required><label>Email Address</label></div>
+      <div class="form-group"><textarea id="msg" rows="4" required></textarea><label>Message</label></div>
+      <button type="submit" class="send-btn">Send Message</button>
+    </form>
+  </div>
+</main>
+
+<script>
+  function enterSite() {
+    document.getElementById('landing-page').classList.add('hidden');
+    document.getElementById('main-nav').classList.add('visible');
+    switchView('logos');
+  }
+
+  function goHome() {
+    document.getElementById('landing-page').classList.remove('hidden');
+    document.getElementById('main-nav').classList.remove('visible');
+    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+    document.body.style.backgroundColor = '#f8f6f2';
+    document.body.style.color = '#1a1a1a';
+  }
+
+  function switchView(viewId) {
+    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+    const isDark = viewId === 'contact';
+    document.body.style.backgroundColor = isDark ? '#111' : '#f8f6f2';
+    document.body.style.color = isDark ? '#fff' : '#1a1a1a';
+    window.scrollTo(0,0);
+  }
+
+  const dot = document.getElementById('cursor-dot');
+  const outline = document.getElementById('cursor-outline');
+  window.addEventListener('mousemove', (e) => {
+    if (window.innerWidth > 900) {
+      dot.style.left = e.clientX + 'px';
+      dot.style.top = e.clientY + 'px';
+      outline.animate({ left: e.clientX + 'px', top: e.clientY + 'px' }, { duration: 500, fill: "forwards" });
+    }
+  });
+
+  document.querySelectorAll('a, button, input, textarea, .project-img').forEach(el => {
+    el.addEventListener('mouseenter', () => outline.style.transform = 'scale(2.5)');
+    el.addEventListener('mouseleave', () => outline.style.transform = 'scale(1)');
+  });
+</script>
+</body>
+</html>
